@@ -1,33 +1,26 @@
 import socket
 import sys
 
-# assgining IP for sending packets (source IP)
-UDP_IP = "127.0.0.1"
-#UDP_PORT = 5000
+ttl = 1
 
-#getting host/destination IP from the hostname porvided as argument
-hostIP = socket.gethostbyname(f"{sys.argv[1]}")
-print(f"{hostIP}")
+host_IP = socket.gethostbyname(sys.argv[1])
 
-def sendPacket(hostIP):
-    # creating UDP socket
-    sock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
-    # sending the message packet with empty message to hostIP on HTTP port
-    sock.sendto(b"",(hostIP,80))
+def send():
+    sock = socket.socket(socket.AF_INET,socket.SOCK_RAW,socket.IPPROTO_ICMP)
+    sock.setsockopt(socket.IPPROTO_ICMP,socket.IP_HDRINCL,ttl)
+    sock.sendto(b"",(host_IP,80))
 
-def receivePacket():
-    #creating UDP socket for receiving
-    sock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
-    # binding the address to the socket
-    sock.bind((UDP_IP,80))
-    # listening for the packet to receive
+def receive():
+    # Raw packet sending icmp echo request
+    sock = socket.socket(socket.AF_INET,socket.SOCK_RAW,socket.IPPROTO_ICMP)
+    sock.setsockopt(socket.IPPROTO_ICMP,socket.IP_HDRINCL,ttl)
+    sock.bind(("127.0.0.1",80))
+
     while True:
-        #packet being received in chunks of 4096 size
-        data,addr = sock.recvfrom(4096)
-        print(f"{addr[0]}")
+        data,addr = sock.recvfrom(1024)
+        print(f"reply received from {addr}")
 
-# sending packets
-sendPacket(hostIP)
+send()
+receive()
 
-#receiving packets
-receivePacket()
+'''setsockopt(): is used to control socket behaviour like allocate buffer size, control timeout etc'''
