@@ -19,4 +19,4 @@ and then we will increment TTL by 1 and again send the packet. like this we will
 address's of all routers present in the path.
 
 **But not all router's reply or send ICMP message they are not just designed like it, so they  
-will just drop the packet.** In this case we print "package dropped" or something similar.
+will just drop the packet.** In this case we will just print "package dropped" or something similar.
