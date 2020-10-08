@@ -21,15 +21,21 @@ def receive():
     print("listening...")
     #listening to incoming icmp messages
     while(1):
-        #receiving the data and addresss of the router sending it
-        data,addr = sock.recvfrom(1024)
-        print(f"{addr[0]}")
-        #if received ip address equal to the final destination host IP then stop listening
-        if addr[0]==host_IP:
-            break
-        #if not then increament ttl and send
-        ttl+=1
-        send(ttl)
+        #setting timeout for receiving the packet
+        sock.settimeout(1)
+        try:
+            #receiving the data and addresss of the router sending it
+            data,addr = sock.recvfrom(1024)
+            print(f"{addr[0]}")
+            #if received ip address equal to the final destination host IP then stop listening
+            if addr[0]==host_IP:
+                break
+            #if not then increament ttl and send
+            ttl+=1
+            send(ttl)
+        #if timed out or time exceeded print what happened
+        except socket.timeout:
+            print("package dropped")
 send(ttl)
 receive()
 
