@@ -1,9 +1,14 @@
 # SystemRecTask
 # Task Name: Networks
 
-In this task we build a program in which we try to get the different IP's addresses from 
-where our packet is sent through i.e. the addresses of different router's used in the  
-route to forward this packet to its destination.  
+In this task we build a program similar to traceroute. whenever you browse on internet clicking  
+on some website link a **request** message is sent from your system to **server** which has whole  
+database of that site and it sends those information as a **reply** to your request which the  
+browser gets and renders it according to structure mentioned in the webpage code. the message  
+traverse from many intermediate machines which are called **routers** which are responsible for  
+routing the message packet path back to us. all these routers have a unique address called **IP  
+address** i.e. **Internet Protocol address**. we are interested to find all the ip addresses of  
+all these routers from which our request message packet traverse to reach the server.
 
 *It uses a similar logic which is used in tracert in windows and tracepath which is in linux.*  
 
