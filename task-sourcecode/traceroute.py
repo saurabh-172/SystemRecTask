@@ -6,15 +6,14 @@ ttl = 1
 #getting the IP address of the host to which message is being sent
 host_IP = socket.gethostbyname(sys.argv[1])
 
-def send(ttl):
+def send_udp_packet(ttl):
     #creating UDP scoket
     sock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
     #setting ttl for the message to be sent
     sock.setsockopt(socket.IPPROTO_IP,socket.IP_TTL,ttl)
-    #sending the message
     sock.sendto(b"",(host_IP,5000))
 
-def receive():
+def capture_icmp_packet():
     ttl=1
     # creating raw socket for receiving icmp messages
     sock = socket.socket(socket.AF_INET,socket.SOCK_RAW,socket.IPPROTO_ICMP)
@@ -24,7 +23,6 @@ def receive():
         #setting timeout for receiving the packet
         sock.settimeout(1)
         try:
-            #receiving the data and addresss of the router sending it
             data,addr = sock.recvfrom(1024)
             print(f"{addr[0]}")
             #if received ip address equal to the final destination host IP then stop listening
@@ -32,10 +30,12 @@ def receive():
                 break
             #if not then increament ttl and send
             ttl+=1
-            send(ttl)
+            send_udp_packet(ttl)
         #if timed out or time exceeded print what happened
         except socket.timeout:
             print("package dropped")
-send(ttl)
-receive()
+#send udp packet
+send_udp_packet(ttl)
+#capture incoming icmp message packets
+capture_icmp_packet()
 
